@@ -45,11 +45,6 @@ class Vector {
     return this.get_basis_();
   }
 
-  to_three_array() {
-    let array = this.get_basis_();
-    return [array[2], -arrya[0], array[1]]
-  }
-
   get_basis_() {
     return [];
   }
@@ -89,6 +84,11 @@ class Size extends Vector3D {
     return new Size(...this.get_basis_());
   }
 
+  to_three_array() {
+    let array = this.get_basis_();
+    return [array[2], array[0], array[1]]
+  }
+
   static diff(a, b) {
     let w = Math.abs(Math.abs(a.x - b.x) - 1);
     let h = Math.abs(Math.abs(a.y - b.y) - 1);
@@ -100,6 +100,11 @@ class Size extends Vector3D {
 class Pos extends Vector3D {
   clone() {
     return new Pos(...this.get_basis_());
+  }
+
+  to_three_array() {
+    let array = this.get_basis_();
+    return [array[2], -array[0], array[1]]
   }
 
   is_less_than(other) {
@@ -178,9 +183,9 @@ class SquarePyramid extends Polyhedron {
   constructor(pos, bottom_len, height, axis = 'z', reverse = false, ...visual) {
     super(pos, new Size(bottom_len, bottom_len, height), ...visual);
     let r = reverse ? Math.PI : 0;
-    if(axis === 'x')      this.rotation = [Math.PI / 4, 0, r - Math.PI / 2];
-    else if(axis === 'y') this.rotation = [r, Math.PI / 4, 0];
-    else if(axis === 'z') this.rotation = [Math.PI / 2 - r, Math.PI / 4, 0];
+    if(axis === 'z')      this.rotation = [Math.PI / 4, 0, r - Math.PI / 2];
+    else if(axis === 'x') this.rotation = [r, Math.PI / 4, 0];
+    else if(axis === 'y') this.rotation = [Math.PI / 2 - r, Math.PI / 4, 0];
     else console.error('bad axis');
   }
 
@@ -447,7 +452,24 @@ class Circuit {
       let module_meshes = module.create_meshes(...visual);
       meshes.push(...module_meshes);
     }
+    this.replace_meshes(meshes);
     return meshes;
+  }
+
+  replace_meshes(meshes) {
+    let min_pos = new THREE.Vector3(0, 0, 0);
+    for(let mesh of meshes) {
+      let pos = mesh.position;
+      min_pos.x = Math.min(min_pos.x, pos.x);
+      min_pos.y = Math.min(min_pos.y, pos.y);
+      min_pos.z = Math.min(min_pos.z, pos.z);
+    }
+    for(let mesh of meshes) {
+      let pos = mesh.position;
+      pos.x -= min_pos.x;
+      pos.y -= min_pos.y;
+      pos.z -= min_pos.z;
+    }
   }
 
   set_visual(...visual) {
