@@ -45,6 +45,11 @@ class Vector {
     return this.get_basis_();
   }
 
+  to_three_array() {
+    let array = this.get_basis_();
+    return [array[2], -arrya[0], array[1]]
+  }
+
   get_basis_() {
     return [];
   }
@@ -135,7 +140,7 @@ class Polyhedron {
     if(this.opacity != undefined) opacity = this.opacity;
     let material = new THREE.MeshLambertMaterial({color: color, transparent: transparent, opacity: opacity});
     let mesh = new THREE.Mesh(geometry, material);
-    mesh.position.set(...this.pos.mul(settings.SCALE).to_array());
+    mesh.position.set(...this.pos.mul(settings.SCALE).to_three_array());
     return [mesh];
   }
 
@@ -160,7 +165,7 @@ class Polyhedron {
 
 class Rectangular extends Polyhedron {
   create_meshes(...visual) {
-    let geometry = new THREE.BoxGeometry(...this.size.mul(settings.SCALE).to_array());
+    let geometry = new THREE.BoxGeometry(...this.size.mul(settings.SCALE).to_three_array());
     return super.create_meshes(geometry, ...visual);
   }
 
