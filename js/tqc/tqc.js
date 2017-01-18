@@ -452,7 +452,7 @@ class Circuit {
       let module_meshes = module.create_meshes(...visual);
       meshes.push(...module_meshes);
     }
-    this.replace_meshes(meshes);
+    //this.replace_meshes(meshes);
     return meshes;
   }
 
