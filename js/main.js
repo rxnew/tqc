@@ -115,6 +115,30 @@ var main = function(data) {
       return this.circuitsData[circuitId];
     };
 
+    this.set_min_position = function() {
+      this.min_pos = new THREE.Vector3(0, 0, 0);
+      let first = true;
+      for(let mesh of this.meshes) {
+        let pos = mesh.position;
+        if(first) {
+          this.min_pos.copy(pos);
+          first = false;
+        }
+        this.min_pos.x = Math.min(this.min_pos.x, pos.x);
+        this.min_pos.y = Math.min(this.min_pos.y, pos.y);
+        this.min_pos.z = Math.min(this.min_pos.z, pos.z);
+      }
+    };
+
+    this.replace_meshes = function(meshes) {
+      for(let mesh of meshes) {
+        let pos = mesh.position;
+        pos.x -= this.min_pos.x;
+        pos.y -= this.min_pos.y;
+        pos.z -= this.min_pos.z;
+      }
+    };
+
     this.render = function(data, basePosition = [0, 0, 0], rotation = ['x', 'y', 'z'], circuitId = 'main', setCamera = true) {
       let currentData = ('main' in data) ? data.main : data;
       if('circuit' in currentData) currentData = currentData.circuit;
@@ -129,6 +153,8 @@ var main = function(data) {
       if(!this.circuits) this.circuits = {};
       this.circuits[circuitId] = CircuitCreator.create(currentData, basePosition, rotation);
       this.meshes = this.circuits[circuitId].create_meshes();
+      this.set_min_position();
+      this.replace_meshes(this.meshes);
       for(let mesh of this.meshes) {
         mesh['circuitId'] = circuitId;
         scene.add(mesh);
@@ -248,6 +274,7 @@ var main = function(data) {
 
       this.circuits[circuitId] = CircuitCreator.create(currentData, basePosition, rotation);
       let newMeshes = this.circuits[circuitId].create_meshes();
+      this.replace_meshes(newMeshes);
       for(let mesh of newMeshes) {
         mesh['circuitId'] = circuitId;
         scene.add(mesh);
