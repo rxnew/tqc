@@ -141,7 +141,8 @@ var main = function(data) {
 
     this.render = function(data, basePosition = [0, 0, 0], rotation = ['x', 'y', 'z'], circuitId = 'main', setCamera = true) {
       let currentData = ('main' in data) ? data.main : data;
-      if('circuit' in currentData) currentData = currentData.circuit;
+      if('geometry' in currentData)     currentData = currentData.geometry;
+      else if('circuit' in currentData) currentData = currentData.circuit;
 
       if(!this.transformationManager) this.transformationManager = new TransformationManager(this, circuitId, data);
       this.transformationManager.setButtons(currentData);
@@ -265,7 +266,8 @@ var main = function(data) {
 
     this.addrender = function(data, basePosition = [0, 0, 0], rotation = ['x', 'y', 'z'], circuitId = 'main') {
       let currentData = ('main' in data) ? data.main : data;
-      if('circuit' in currentData) currentData = currentData.circuit;
+      if('geometry' in currentData)     currentData = currentData.geometry;
+      else if('circuit' in currentData) currentData = currentData.circuit;
 
       if(!this.transformationManager) this.transformationManager = new TransformationManager(this, circuitId, data);
       this.transformationManager.setButtons(currentData);
