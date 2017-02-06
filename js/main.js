@@ -435,11 +435,16 @@ var main = function(data) {
       if(!('module_id' in intersectMesh)) return;
       let circuitId = intersectMesh.circuitId;
       let moduleId = intersectMesh.module_id;
+      let realModuleId = intersectMesh.real_module_id;
       let newCircuitId = circuitId + '_' + moduleId;
       let rotation = intersectMesh.raw_data.rotation;
       console.info(intersectMesh.raw_data.rotation);
-      if(moduleId in data) circuitRenderer.rerender(data[moduleId], [0, 0, 0], rotation, newCircuitId);
-      else                 loadFile(moduleId, [0, 0, 0], rotation, newCircuitId);
+      if(realModuleId in data) {
+        circuitRenderer.rerender(data[realModuleId], [0, 0, 0], rotation, newCircuitId);
+      }
+      else {
+        loadFile(realModuleId, [0, 0, 0], rotation, newCircuitId);
+      }
     };
   };
 
@@ -474,12 +479,12 @@ var main = function(data) {
       let newCircuitId = circuitId + '_' + moduleId;
       let basePosition = calculateBasePosition(intersectMesh.raw_data.position, circuitId);
       let rotation = intersectMesh.raw_data.rotation;
-      if(moduleId in data) {
+      if(realModuleId in data) {
         CircuitRenderer.removeModuleMesh(circuitId, moduleId);
         circuitRenderer.addrender(data[realModuleId], basePosition, rotation, newCircuitId);
       }
       else {
-        loadFile(moduleId, basePosition, rotation, newCircuitId, circuitId);
+        loadFile(realModuleId, basePosition, rotation, newCircuitId, circuitId);
       }
     };
   };
