@@ -449,14 +449,14 @@ var main = function(data) {
   };
 
   let rightClickModuleEvent = function() {
-    let loadFile = function(moduleId, basePosition, rotation, newCircuitId, circuitId = 'main') {
-      let fileName = 'samples/' + moduleId + '.json';
+    let loadFile = function(moduleId, realModuleId, basePosition, rotation, newCircuitId, circuitId = 'main') {
+      let fileName = 'samples/' + realModuleId + '.json';
       $.getJSON(fileName, function(data) {
         circuitRenderer.removeModuleMesh(circuitId, moduleId);
         circuitRenderer.addrender(data, basePosition, rotation, newCircuitId);
       })
       .fail(function(jqXHR, textStatus, errorThrown) {
-        console.error('Not found a module: ' + moduleId);
+        console.error('Not found a module: ' + realModuleId);
       });
     };
 
@@ -480,11 +480,11 @@ var main = function(data) {
       let basePosition = calculateBasePosition(intersectMesh.raw_data.position, circuitId);
       let rotation = intersectMesh.raw_data.rotation;
       if(realModuleId in data) {
-        CircuitRenderer.removeModuleMesh(circuitId, moduleId);
+        circuitRenderer.removeModuleMesh(circuitId, moduleId);
         circuitRenderer.addrender(data[realModuleId], basePosition, rotation, newCircuitId);
       }
       else {
-        loadFile(realModuleId, basePosition, rotation, newCircuitId, circuitId);
+        loadFile(moduleId, realModuleId, basePosition, rotation, newCircuitId, circuitId);
       }
     };
   };
