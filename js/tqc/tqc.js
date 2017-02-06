@@ -419,10 +419,15 @@ class Module extends Rectangular {
 
   set_id_(meshes) {
     for(let mesh of meshes) {
-      mesh.module_id = this.raw_data.id;
+      mesh.module_id = this.raw_data.id + '_' + Module.count_();
       mesh.raw_data = this.raw_data;
     }
     return meshes;
+  }
+
+  static count_() {
+    if(!this.counter_) this.counter_ = 0;
+    return ++this.counter_;
   }
 };
 
