@@ -420,6 +420,7 @@ class Module extends Rectangular {
   set_id_(meshes) {
     for(let mesh of meshes) {
       mesh.module_id = this.raw_data.id + '_' + Module.count_();
+      mesh.real_module_id = this.raw_data.id
       mesh.raw_data = this.raw_data;
     }
     return meshes;

@@ -398,6 +398,7 @@ var main = function(data) {
       if(!('module_id' in intersectMesh)) return clear();
       let circuitId = intersectMesh.circuitId;
       let moduleId = intersectMesh.module_id;
+      let realModuleId = intersectMesh.real_module_id;
       if(circuitId === previousCircuitId && moduleId === previousModuleId) return;
       else {
         clear([intersectMesh], circuitId, moduleId);
@@ -407,9 +408,9 @@ var main = function(data) {
           material.color.set(settings.COLOR_SET.SELECTED);
         }
         let moduleRawData = intersectMesh.raw_data;
-        let text = ('description' in moduleRawData) ? moduleRawData.description : moduleId;
+        let text = ('description' in moduleRawData) ? moduleRawData.description : realModuleId;
         showDescriptionText(text);
-        console.log('Module ID: ' + moduleId);
+        console.log('Module ID: ' + realModuleId);
       }
     };
 
@@ -469,12 +470,13 @@ var main = function(data) {
       if(!('module_id' in intersectMesh)) return;
       let circuitId = intersectMesh.circuitId;
       let moduleId = intersectMesh.module_id;
+      let realModuleId = intersectMesh.real_module_id;
       let newCircuitId = circuitId + '_' + moduleId;
       let basePosition = calculateBasePosition(intersectMesh.raw_data.position, circuitId);
       let rotation = intersectMesh.raw_data.rotation;
       if(moduleId in data) {
         CircuitRenderer.removeModuleMesh(circuitId, moduleId);
-        circuitRenderer.addrender(data[moduleId], basePosition, rotation, newCircuitId);
+        circuitRenderer.addrender(data[realModuleId], basePosition, rotation, newCircuitId);
       }
       else {
         loadFile(moduleId, basePosition, rotation, newCircuitId, circuitId);
